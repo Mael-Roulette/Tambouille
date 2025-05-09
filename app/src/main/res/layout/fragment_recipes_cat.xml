@@ -26,13 +26,27 @@
             android:id="@+id/recipeListTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:text="@string/cat_title"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/backButton"
-            app:layout_constraintStart_toEndOf="@+id/backButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/backButton"
             app:layout_constraintVertical_bias="0.625" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:clipToPadding="false"
+            android:padding="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backButton"
+            tools:listitem="@layout/item_category" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

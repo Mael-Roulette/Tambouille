@@ -10,4 +10,5 @@
     <string name="last_recipes">Vos dernières recettes</string>
     <string name="back_button_spechable">Retour</string>
     <string name="add_button">Ajouter une recette</string>
+    <string name="select_image_button_text">Ajouter une image</string>
 </resources>

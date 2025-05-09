@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_second"
+    app:startDestination="@id/addRecipeFragment">
+
+    <fragment
+        android:id="@+id/addRecipeFragment"
+        android:name="fr.roulette.dev.latambouille.ui.recipe.AddRecipeFragment"
+        android:label="fragment_add_recipe"
+        tools:layout="@layout/fragment_add_recipe" />
+    <fragment
+        android:id="@+id/editRecipeFragment"
+        android:name="fr.roulette.dev.latambouille.ui.recipe.EditRecipeFragment"
+        android:label="fragment_edit_recipe"
+        tools:layout="@layout/fragment_edit_recipe" />
+    <fragment
+        android:id="@+id/viewRecipeFragment"
+        android:name="fr.roulette.dev.latambouille.ui.recipe.ViewRecipeFragment"
+        android:label="fragment_view_recipe"
+        tools:layout="@layout/fragment_view_recipe" />
+</navigation>

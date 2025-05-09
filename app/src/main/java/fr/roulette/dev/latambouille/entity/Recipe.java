@@ -19,8 +19,8 @@ public class Recipe {
   @ColumnInfo(name = "ingredients")
   private String ingredients;
 
-  @ColumnInfo(name = "preparation_time")
-  private String preparation_time;
+  @ColumnInfo(name = "preparationTime")
+  private String preparationTime;
 
   @ColumnInfo(name = "instructions")
   private String instructions;
@@ -28,12 +28,10 @@ public class Recipe {
   @ColumnInfo(name = "image")
   private String image;
 
-  public Recipe() {}
-
-  public Recipe(@NonNull String name, String ingredients, String preparation_time, String instructions, String image) {
+  public Recipe(@NonNull String name, String ingredients, String preparationTime, String instructions, String image) {
     this.name = name;
     this.ingredients = ingredients;
-    this.preparation_time = preparation_time;
+    this.preparationTime = preparationTime;
     this.instructions = instructions;
     this.image = image;
   }
@@ -63,12 +61,12 @@ public class Recipe {
     this.ingredients = ingredients;
   }
 
-  public String getPreparation_time() {
-    return preparation_time;
+  public String getPreparationTime() {
+    return preparationTime;
   }
 
   public void setPreparation_time(String preparation_time) {
-    this.preparation_time = preparation_time;
+    this.preparationTime = preparation_time;
   }
 
   public String getInstructions() {

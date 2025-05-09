@@ -1,31 +1,51 @@
 package fr.roulette.dev.latambouille;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
+  private NavController navController;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.fragmentContainerView);
+            .findFragmentById(R.id.fragmentContainerView);
 
     if (navHostFragment != null) {
-      NavController navController = navHostFragment.getNavController();
-      NavigationUI.setupWithNavController(bottomNavigationView, navController);
+      navController = navHostFragment.getNavController();
     }
+
+    setupCustomNavigation();
+  }
+
+  private void setupCustomNavigation() {
+    LinearLayout listeButton = findViewById(R.id.listeButton);
+    FloatingActionButton centerButton = findViewById(R.id.centerButton);
+    LinearLayout categoriesButton = findViewById(R.id.categoriesButton);
+
+    NavOptions navOptions = new NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setPopUpTo(navController.getGraph().getStartDestinationId(), false)
+            .build();
+
+    listeButton.setOnClickListener(v -> navController.navigate(R.id.recipesListFragment, null, navOptions));
+
+    centerButton.setOnClickListener(v -> {
+        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+        startActivity(intent);
+    });
+
+    categoriesButton.setOnClickListener(v -> navController.navigate(R.id.recipesCatFragment, null, navOptions));
   }
 }

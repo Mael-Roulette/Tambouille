@@ -14,10 +14,18 @@
         android:id="@+id/recipesListFragment"
         android:name="fr.roulette.dev.latambouille.ui.home.RecipesListFragment"
         android:label="fragment_recipes_list"
-        tools:layout="@layout/fragment_recipes_list" />
+        tools:layout="@layout/fragment_recipes_list" >
+        <action
+            android:id="@+id/action_recipesListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/recipesCatFragment"
         android:name="fr.roulette.dev.latambouille.ui.home.RecipesCatFragment"
         android:label="fragment_recipes_cat"
-        tools:layout="@layout/fragment_recipes_cat" />
+        tools:layout="@layout/fragment_recipes_cat" >
+        <action
+            android:id="@+id/action_recipesCatFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

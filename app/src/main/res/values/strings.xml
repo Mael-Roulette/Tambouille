@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">La tambouille</string>
     <string name="home_title">Home</string>
-    <string name="list_title">Liste des recettes</string>
+    <string name="list_title">Vos recettes</string>
     <string name="cat_title">Catégories</string>
     <string name="view_recipe_title">Recette</string>
     <string name="add_recipe_title">Ajouter une recette</string>
     <string name="edit_recipe_title">Modifier une recette</string>
+    <string name="search">Rechercher…</string>
+    <string name="last_recipes">Vos dernières recettes</string>
+    <string name="back_button_spechable">Retour</string>
+    <string name="add_button">Ajouter une recette</string>
 </resources>

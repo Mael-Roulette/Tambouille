@@ -11,4 +11,27 @@
     <string name="back_button_spechable">Retour</string>
     <string name="add_button">Ajouter une recette</string>
     <string name="select_image_button_text">Ajouter une image</string>
+
+    // Ajout d'une recette
+    <string name="add_recipe_name">Nom de la recette</string>
+    <string name="add_recipe_ingredient">Ingrédients</string>
+    <string name="add_recipe_time">Temps de préparation</string>
+    <string-array name="time_array">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>1h</item>
+        <item>1h10</item>
+        <item>1h20</item>
+        <item>1h30</item>
+        <item>1h40</item>
+        <item>1h50</item>
+        <item>2h</item>
+    </string-array>
+    <string name="add_recipe_cat">Catégorie</string>
+    <string name="add_recipe_prep">Préparation</string>
+    <string name="add_recipe_button">Ajouter la recette</string>
+
 </resources>

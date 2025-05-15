@@ -6,7 +6,19 @@
         <item name="android:statusBarColor">?attr/background</item>
         <!-- Background color -->
         <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimary">@color/black</item>
         <!-- Force light mode -->
         <item name="android:forceDarkAllowed">false</item>
+    </style>
+
+    <style name="CustomTextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="boxStrokeColor">@color/dark_orange</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
     </style>
 </resources>

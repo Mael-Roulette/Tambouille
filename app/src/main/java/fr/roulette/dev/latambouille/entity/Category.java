@@ -18,5 +18,7 @@ public class Category {
   public Category(@NonNull String name) {
     this.name = name;
   }
+
+  public String getName() { return name; }
 }
 

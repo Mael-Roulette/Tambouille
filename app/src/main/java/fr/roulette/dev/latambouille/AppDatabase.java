@@ -62,10 +62,39 @@ public abstract class AppDatabase extends RoomDatabase {
   }
 
   private static void addRecipesSample(AppDatabase db) {
-    Recipe carbonara = new Recipe("Pasta Carbonara", "Spaghetti, eggs, bacon, cheese", "20 minutes", "Cook pasta, fry bacon, mix with eggs and cheese.", "image.jpg");
-    Recipe salad = new Recipe("Salad", "salad, tomate, oeufs", "10 minutes", "Mix ingredients and cook.", "image.jpg");
+    Category saleCat = db.categoryDao().getCategoryByName("Salé");
+    Category sucreCat = db.categoryDao().getCategoryByName("Sucré");
 
-    db.recipeDao().insertRecipe(carbonara);
-    db.recipeDao().insertRecipe(salad);
+    Recipe quiche = new Recipe(
+"Quiche Lorraine",
+"Pâte brisée, lardons, œufs, crème fraîche, gruyère",
+"45 minutes",
+            saleCat.getCategoryId(),
+"Préchauffer le four. Faire revenir les lardons. Mélanger œufs, crème et fromage. Verser sur la pâte avec les lardons. Enfourner.",
+"quiche.jpg"
+    );
+
+    Recipe crepes = new Recipe(
+"Crêpes",
+"Farine, œufs, lait, sucre, beurre",
+"30 minutes",
+            sucreCat.getCategoryId(),
+"Mélanger les ingrédients pour obtenir une pâte lisse. Laisser reposer 1h. Faire cuire chaque crêpe dans une poêle beurrée.",
+"crepes.jpg"
+    );
+
+    Recipe ratatouille = new Recipe(
+"Ratatouille",
+"Courgettes, aubergines, poivrons, tomates, oignons, ail",
+"1 heure",
+  saleCat.getCategoryId(),
+"Couper tous les légumes. Faire revenir les oignons et l’ail, puis ajouter les légumes progressivement. Laisser mijoter à feu doux.",
+"ratatouille.jpg"
+    );
+
+
+    db.recipeDao().insertRecipe(quiche);
+    db.recipeDao().insertRecipe(crepes);
+    db.recipeDao().insertRecipe(ratatouille);
   }
 }

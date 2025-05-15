@@ -19,6 +19,8 @@ public class Category {
     this.name = name;
   }
 
+  public int getCategoryId() { return categoryId; }
+
   public String getName() { return name; }
 }
 

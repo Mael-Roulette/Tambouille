@@ -1,6 +1,7 @@
 package fr.roulette.dev.latambouille.ui.home;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
+import fr.roulette.dev.latambouille.SecondActivity;
 import fr.roulette.dev.latambouille.entity.Recipe;
 import fr.roulette.dev.latambouille.entity.RecipeDAO;
 import fr.roulette.dev.latambouille.ui.RecipesListAdapter;
@@ -55,6 +57,16 @@ public class RecipesListFragment extends Fragment {
 
         RecipesListAdapter recipesAdapter = new RecipesListAdapter((Activity) requireContext(), new ArrayList<>());
         recipesListView.setAdapter(recipesAdapter);
+
+        recipesListView.setOnItemClickListener((parent, v, position, id) -> {
+          Recipe selectedRecipe = recipesAdapter.getItem(position);
+
+          Intent intent = new Intent(requireContext(), SecondActivity.class);
+          intent.putExtra("recipeId", selectedRecipe.getRecipeId());
+          intent.putExtra("fragmentToLoad", "viewRecipe");
+
+          startActivity(intent);
+        });
 
         new Thread(() -> {
           accessDatabase();

@@ -2,8 +2,8 @@ package fr.roulette.dev.latambouille.ui.recipe;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
@@ -35,8 +36,6 @@ public class AddRecipeFragment extends Fragment {
   private AppDatabase database;
   private Uri selectedImageUri;
   private ImageView imageView;
-  private Button selectImageButton;
-  private Button saveButton;
   private TextInputLayout nameInputLayout;
   private TextInputLayout ingredientInputLayout;
   private Spinner timeSpinner;
@@ -79,8 +78,8 @@ public class AddRecipeFragment extends Fragment {
     });
 
     imageView = view.findViewById(R.id.imageView);
-    selectImageButton = view.findViewById(R.id.selectImageButton);
-    saveButton = view.findViewById(R.id.button);
+    Button selectImageButton = view.findViewById(R.id.selectImageButton);
+    Button saveButton = view.findViewById(R.id.button);
 
     nameInputLayout = view.findViewById(R.id.name_input);
     ingredientInputLayout = view.findViewById(R.id.ingredient_input);
@@ -88,11 +87,7 @@ public class AddRecipeFragment extends Fragment {
     categorySpinner = view.findViewById(R.id.cat_input);
     prepInput = view.findViewById(R.id.prep_input);
 
-    ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
-            getContext(),
-            R.array.time_array,
-            android.R.layout.simple_spinner_item
-    );
+    ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.time_array, android.R.layout.simple_spinner_item);
     timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     timeSpinner.setAdapter(timeAdapter);
 
@@ -104,20 +99,16 @@ public class AddRecipeFragment extends Fragment {
     }
 
     ArrayAdapter<String> catAdapter = new ArrayAdapter<>(
-            getContext(),
+            requireContext(),
             android.R.layout.simple_spinner_item,
             categoryNames
     );
     catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     categorySpinner.setAdapter(catAdapter);
 
-    selectImageButton.setOnClickListener(v -> {
-      openGallery();
-    });
+    selectImageButton.setOnClickListener(v -> openGallery());
 
-    saveButton.setOnClickListener(v -> {
-      saveRecipe();
-    });
+    saveButton.setOnClickListener(v -> saveRecipe());
 
     return view;
   }
@@ -131,8 +122,8 @@ public class AddRecipeFragment extends Fragment {
   private void saveRecipe() {
     if (validateForm()) {
       try {
-        String name = nameInputLayout.getEditText().getText().toString().trim();
-        String ingredients = ingredientInputLayout.getEditText().getText().toString().trim();
+        String name = Objects.requireNonNull(nameInputLayout.getEditText()).getText().toString().trim();
+        String ingredients = Objects.requireNonNull(ingredientInputLayout.getEditText()).getText().toString().trim();
         String time = timeSpinner.getSelectedItem().toString();
         String preparation = prepInput.getText().toString().trim();
         String categoryName = categorySpinner.getSelectedItem().toString();
@@ -164,14 +155,14 @@ public class AddRecipeFragment extends Fragment {
   private boolean validateForm() {
     boolean isValid = true;
 
-    if (nameInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+    if (Objects.requireNonNull(nameInputLayout.getEditText()).getText().toString().trim().isEmpty()) {
       nameInputLayout.setError("Veuillez entrer un nom de recette");
       isValid = false;
     } else {
       nameInputLayout.setError(null);
     }
 
-    if (ingredientInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+    if (Objects.requireNonNull(ingredientInputLayout.getEditText()).getText().toString().trim().isEmpty()) {
       ingredientInputLayout.setError("Veuillez entrer des ingrédients");
       isValid = false;
     } else {

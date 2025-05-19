@@ -14,14 +14,30 @@ import fr.roulette.dev.latambouille.entity.Category;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private Category[] categories;
+    private CategoryAdapter.OnCategoryClickListener clickListener;
 
     public CategoryAdapter(Category[] categories) {
         this.categories = categories;
     }
 
+    public void setOnItemClickListener(CategoryAdapter.OnCategoryClickListener listener) {
+        this.clickListener = listener;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        Category category = categories[position];
+        holder.categoryName.setText(category.name);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onCategoryClick(category);
+            }
+        });
+    }
+
     public void updateCategories(Category[] categories) {
         this.categories = categories;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -31,10 +47,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return new CategoryViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        Category category = categories[position];
-        holder.categoryName.setText(category.name);
+    public interface OnCategoryClickListener {
+        void onCategoryClick(Category category);
     }
 
     @Override

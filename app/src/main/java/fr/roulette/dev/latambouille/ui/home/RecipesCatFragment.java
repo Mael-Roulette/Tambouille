@@ -1,17 +1,16 @@
 package fr.roulette.dev.latambouille.ui.home;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
@@ -42,6 +41,14 @@ public class RecipesCatFragment extends Fragment {
 
     RecyclerView categoriesRecyclerView = view.findViewById(R.id.recyclerViewCategories);
     CategoryAdapter categoryAdapter = new CategoryAdapter(database.categoryDao().getAllCategories());
+
+    categoryAdapter.setOnItemClickListener(category -> {
+      Bundle args = new Bundle();
+      args.putInt("catId", category.getCategoryId());
+
+      NavController navController = Navigation.findNavController(view);
+      navController.navigate(R.id.action_recipesCatFragment_to_categoryFragment, args);
+    });
 
     GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
     categoriesRecyclerView.setLayoutManager(layoutManager);

@@ -1,7 +1,6 @@
 package fr.roulette.dev.latambouille.entity;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -9,29 +8,29 @@ import androidx.room.Update;
 @Dao
 public interface RecipeDAO {
   @Insert
-  public void insertRecipe(Recipe recipe);
+  void insertRecipe(Recipe recipe);
 
   @Update
-  public void updateRecipe(Recipe recipe);
-
-  @Delete
-  public void deleteRecipe(Recipe recipe);
+  void updateRecipe(Recipe recipe);
 
   @Query("DELETE FROM Recipe WHERE recipeId = :id")
-  public void deleteRecipeById(int id);
+  void deleteRecipeById(int id);
 
   @Query("SELECT * FROM Recipe")
-  public Recipe[] getAllRecipes();
+  Recipe[] getAllRecipes();
 
   @Query("SELECT * FROM Recipe WHERE recipeId = :id")
-  public Recipe getRecipeById(int id);
+  Recipe getRecipeById(int id);
+
+  @Query("SELECT * FROM Recipe WHERE category = :category")
+  Recipe[] getRecipesByCategory(int category);
 
   @Query("SELECT * FROM Recipe WHERE name = :name")
-  public Recipe getRecipeByName(String name);
+  Recipe getRecipeByName(String name);
 
   @Query("SELECT * FROM Recipe WHERE ingredients LIKE :ingredients")
-  public Recipe getRecipeByIngredients(String ingredients);
+  Recipe getRecipeByIngredients(String ingredients);
 
   @Query("SELECT * FROM Recipe WHERE instructions LIKE :instructions")
-  public Recipe getRecipeByInstructions(String instructions);
+  Recipe getRecipeByInstructions(String instructions);
 }

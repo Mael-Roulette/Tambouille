@@ -17,6 +17,9 @@ public interface RecipeDAO {
   @Delete
   public void deleteRecipe(Recipe recipe);
 
+  @Query("DELETE FROM Recipe WHERE recipeId = :id")
+  public void deleteRecipeById(int id);
+
   @Query("SELECT * FROM Recipe")
   public Recipe[] getAllRecipes();
 

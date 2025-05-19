@@ -19,5 +19,9 @@
         android:id="@+id/viewRecipeFragment"
         android:name="fr.roulette.dev.latambouille.ui.recipe.ViewRecipeFragment"
         android:label="fragment_view_recipe"
-        tools:layout="@layout/fragment_view_recipe" />
+        tools:layout="@layout/fragment_view_recipe" >
+        <action
+            android:id="@+id/action_viewRecipeFragment_to_editRecipeFragment"
+            app:destination="@id/editRecipeFragment" />
+    </fragment>
 </navigation>

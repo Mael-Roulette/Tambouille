@@ -14,9 +14,18 @@ import fr.roulette.dev.latambouille.entity.Recipe;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
     private Recipe[] recipes;
+    private OnRecipeClickListener clickListener;
+
+    public interface OnRecipeClickListener {
+        void onRecipeClick(Recipe recipe);
+    }
 
     public RecipesAdapter(Recipe[] recipes) {
         this.recipes = recipes;
+    }
+
+    public void setOnItemClickListener(OnRecipeClickListener listener) {
+        this.clickListener = listener;
     }
 
     public void updateRecipes(Recipe[] recipes) {
@@ -35,6 +44,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipes[position];
         holder.recipeName.setText(recipe.getName());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onRecipeClick(recipe);
+            }
+        });
     }
 
     @Override

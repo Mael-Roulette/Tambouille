@@ -2,24 +2,26 @@ package fr.roulette.dev.latambouille.ui.recipe;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.PickVisualMediaRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.fragment.app.Fragment;
-
-import android.provider.MediaStore;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +29,42 @@ import java.util.List;
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
 import fr.roulette.dev.latambouille.entity.Category;
+import fr.roulette.dev.latambouille.entity.Recipe;
 
 public class AddRecipeFragment extends Fragment {
   private AppDatabase database;
-  private static final int PICK_IMAGE_REQUEST = 1;
   private Uri selectedImageUri;
   private ImageView imageView;
   private Button selectImageButton;
+  private Button saveButton;
+  private TextInputLayout nameInputLayout;
+  private TextInputLayout ingredientInputLayout;
+  private Spinner timeSpinner;
+  private Spinner categorySpinner;
+  private EditText prepInput;
+
+  private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
   public AddRecipeFragment() {
-    // Required empty public constructor
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     database = AppDatabase.getInstance(requireContext());
+
+    pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+      if (uri != null) {
+        Log.d("PhotoPicker", "Selected URI: " + uri);
+        selectedImageUri = uri;
+        imageView.setImageURI(uri);
+
+        final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+        requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+      } else {
+        Log.d("PhotoPicker", "No media selected");
+      }
+    });
   }
 
   @Override
@@ -56,7 +78,16 @@ public class AddRecipeFragment extends Fragment {
       activity.finish();
     });
 
-    Spinner timeSpinner = (Spinner) view.findViewById(R.id.time_input);
+    imageView = view.findViewById(R.id.imageView);
+    selectImageButton = view.findViewById(R.id.selectImageButton);
+    saveButton = view.findViewById(R.id.button);
+
+    nameInputLayout = view.findViewById(R.id.name_input);
+    ingredientInputLayout = view.findViewById(R.id.ingredient_input);
+    timeSpinner = view.findViewById(R.id.time_input);
+    categorySpinner = view.findViewById(R.id.cat_input);
+    prepInput = view.findViewById(R.id.prep_input);
+
     ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
             getContext(),
             R.array.time_array,
@@ -72,37 +103,88 @@ public class AddRecipeFragment extends Fragment {
       categoryNames.add(cat.getName());
     }
 
-    Spinner catSpinner = view.findViewById(R.id.cat_input);
     ArrayAdapter<String> catAdapter = new ArrayAdapter<>(
             getContext(),
             android.R.layout.simple_spinner_item,
             categoryNames
     );
     catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    catSpinner.setAdapter(catAdapter);
-
-    imageView = view.findViewById(R.id.imageView);
-    selectImageButton = view.findViewById(R.id.selectImageButton);
+    categorySpinner.setAdapter(catAdapter);
 
     selectImageButton.setOnClickListener(v -> {
       openGallery();
+    });
+
+    saveButton.setOnClickListener(v -> {
+      saveRecipe();
     });
 
     return view;
   }
 
   private void openGallery() {
-    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-    registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-      if (uri != null) {
-        Log.d("PhotoPicker", "Selected URI: " + uri);
-      } else {
-        Log.d("PhotoPicker", "No media selected");
-      }
-    });
-
     pickMedia.launch(new PickVisualMediaRequest.Builder()
-      .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-      .build());
+            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+            .build());
+  }
+
+  private void saveRecipe() {
+    if (validateForm()) {
+      try {
+        String name = nameInputLayout.getEditText().getText().toString().trim();
+        String ingredients = ingredientInputLayout.getEditText().getText().toString().trim();
+        String time = timeSpinner.getSelectedItem().toString();
+        String preparation = prepInput.getText().toString().trim();
+        String categoryName = categorySpinner.getSelectedItem().toString();
+        Category[] categories = database.categoryDao().getAllCategories();
+        int categoryId = 1;
+
+        for (Category category : categories) {
+          if (category.getName().equals(categoryName)) {
+            categoryId = category.getCategoryId();
+            break;
+          }
+        }
+
+        String imageUriString = selectedImageUri != null ? selectedImageUri.toString() : "";
+        Recipe recipe = new Recipe( name, ingredients, time, categoryId, preparation, imageUriString );
+
+        database.recipeDao().insertRecipe(recipe);
+
+        Toast.makeText(getContext(), "Recette ajoutée avec succès", Toast.LENGTH_SHORT).show();
+
+        requireActivity().finish();
+      } catch (Exception e) {
+        Log.e("AddRecipeFragment", "Erreur lors de la sauvegarde de la recette", e);
+        Toast.makeText(getContext(), "Erreur lors de l'ajout de la recette", Toast.LENGTH_SHORT).show();
+      }
+    }
+  }
+
+  private boolean validateForm() {
+    boolean isValid = true;
+
+    if (nameInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+      nameInputLayout.setError("Veuillez entrer un nom de recette");
+      isValid = false;
+    } else {
+      nameInputLayout.setError(null);
+    }
+
+    if (ingredientInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+      ingredientInputLayout.setError("Veuillez entrer des ingrédients");
+      isValid = false;
+    } else {
+      ingredientInputLayout.setError(null);
+    }
+
+    if (prepInput.getText().toString().trim().isEmpty()) {
+      prepInput.setError("Veuillez entrer les étapes de préparation");
+      isValid = false;
+    } else {
+      prepInput.setError(null);
+    }
+
+    return isValid;
   }
 }

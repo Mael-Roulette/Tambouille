@@ -1,5 +1,6 @@
 package fr.roulette.dev.latambouille.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,11 +12,18 @@ import android.view.ViewGroup;
 
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
+import fr.roulette.dev.latambouille.SecondActivity;
+import fr.roulette.dev.latambouille.entity.Recipe;
+import fr.roulette.dev.latambouille.entity.RecipeDAO;
 import fr.roulette.dev.latambouille.ui.CategoryAdapter;
 import fr.roulette.dev.latambouille.ui.RecipesAdapter;
+import fr.roulette.dev.latambouille.RecipeChangeListener;
+import fr.roulette.dev.latambouille.RecipeEventManager;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements RecipeChangeListener {
   private AppDatabase database;
+  private RecipesAdapter recipesAdapter;
+  private RecipeDAO recipeDAO;
 
   public HomeFragment() {
   }
@@ -24,6 +32,7 @@ public class HomeFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     database = AppDatabase.getInstance(requireContext());
+    recipeDAO = database.recipeDao();
   }
 
   @Override
@@ -33,12 +42,53 @@ public class HomeFragment extends Fragment {
     RecyclerView categoriesRecyclerView = view.findViewById(R.id.categoriesRecyclerView);
     RecyclerView recipesRecyclerView = view.findViewById(R.id.recipesRecyclerView);
 
-    CategoryAdapter adapter = new CategoryAdapter(database.categoryDao().getAllCategories());
-    categoriesRecyclerView.setAdapter(adapter);
+    CategoryAdapter catAdapter = new CategoryAdapter(database.categoryDao().getAllCategories());
+    categoriesRecyclerView.setAdapter(catAdapter);
 
-    RecipesAdapter adapter2 = new RecipesAdapter(database.recipeDao().getAllRecipes());
-    recipesRecyclerView.setAdapter(adapter2);
+    recipesAdapter = new RecipesAdapter(recipeDAO.getAllRecipes());
+    recipesRecyclerView.setAdapter(recipesAdapter);
+
+    recipesAdapter.setOnItemClickListener(recipe -> {
+      Intent intent = new Intent(requireContext(), SecondActivity.class);
+      intent.putExtra("recipeId", recipe.getRecipeId());
+      intent.putExtra("fragmentToLoad", "viewRecipe");
+      startActivity(intent);
+    });
 
     return view;
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    RecipeEventManager.getInstance().addListener(this);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    RecipeEventManager.getInstance().removeListener(this);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    refreshRecipesList();
+  }
+
+  @Override
+  public void onRecipeChanged() {
+    refreshRecipesList();
+  }
+
+  private void refreshRecipesList() {
+    new Thread(() -> {
+      final Recipe[] recipes = recipeDAO.getAllRecipes();
+      if (isAdded() && getActivity() != null) {
+        requireActivity().runOnUiThread(() -> {
+          recipesAdapter.updateRecipes(recipes);
+        });
+      }
+    }).start();
   }
 }

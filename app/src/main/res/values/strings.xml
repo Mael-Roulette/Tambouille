@@ -11,6 +11,7 @@
     <string name="back_button_spechable">Retour</string>
     <string name="add_button">Ajouter une recette</string>
     <string name="select_image_button_text">Ajouter une image</string>
+    <string name="edit_recipe_button">Modifier la recette</string>
 
     // Ajout d'une recette
     <string name="add_recipe_name">Nom de la recette</string>
@@ -33,5 +34,12 @@
     <string name="add_recipe_cat">Catégorie</string>
     <string name="add_recipe_prep">Préparation</string>
     <string name="add_recipe_button">Ajouter la recette</string>
+
+    // Vue d'une recette
+    <string name="delete_recipe_button">Supprimer la recette</string>
+
+    // Éditer une recette
+    <string name="edit_recipe_image">Modifier l\'image</string>
+
 
 </resources>

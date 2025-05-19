@@ -71,7 +71,7 @@ public abstract class AppDatabase extends RoomDatabase {
 "45 minutes",
             saleCat.getCategoryId(),
 "Préchauffer le four. Faire revenir les lardons. Mélanger œufs, crème et fromage. Verser sur la pâte avec les lardons. Enfourner.",
-"quiche.jpg"
+""
     );
 
     Recipe crepes = new Recipe(
@@ -80,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
 "30 minutes",
             sucreCat.getCategoryId(),
 "Mélanger les ingrédients pour obtenir une pâte lisse. Laisser reposer 1h. Faire cuire chaque crêpe dans une poêle beurrée.",
-"crepes.jpg"
+""
     );
 
     Recipe ratatouille = new Recipe(
@@ -89,7 +89,7 @@ public abstract class AppDatabase extends RoomDatabase {
 "1 heure",
   saleCat.getCategoryId(),
 "Couper tous les légumes. Faire revenir les oignons et l’ail, puis ajouter les légumes progressivement. Laisser mijoter à feu doux.",
-"ratatouille.jpg"
+""
     );
 
 

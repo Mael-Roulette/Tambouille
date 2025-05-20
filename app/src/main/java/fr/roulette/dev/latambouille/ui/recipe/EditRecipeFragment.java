@@ -1,8 +1,9 @@
 package fr.roulette.dev.latambouille.ui.recipe;
 
 import android.app.Activity;
-import android.os.Bundle;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fr.roulette.dev.latambouille.AppDatabase;
 import fr.roulette.dev.latambouille.R;
@@ -31,7 +33,6 @@ import fr.roulette.dev.latambouille.entity.Category;
 import fr.roulette.dev.latambouille.entity.Recipe;
 
 public class EditRecipeFragment extends Fragment {
-  private static final String ARG_RECIPE_ID = "recipeId";
   private AppDatabase database;
   private Uri selectedImageUri;
   private ImageView imageView;
@@ -63,6 +64,9 @@ public class EditRecipeFragment extends Fragment {
         Log.d("PhotoPicker", "Selected URI: " + uri);
         selectedImageUri = uri;
         imageView.setImageURI(uri);
+
+        final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+        requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
       } else {
         Log.d("PhotoPicker", "No media selected");
       }
@@ -92,7 +96,7 @@ public class EditRecipeFragment extends Fragment {
     prepInput = view.findViewById(R.id.prep_input);
 
     ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(
-            getContext(),
+            requireContext(),
             R.array.time_array,
             android.R.layout.simple_spinner_item
     );
@@ -107,7 +111,7 @@ public class EditRecipeFragment extends Fragment {
     }
 
     ArrayAdapter<String> catAdapter = new ArrayAdapter<>(
-            getContext(),
+            requireContext(),
             android.R.layout.simple_spinner_item,
             categoryNames
     );
@@ -121,13 +125,9 @@ public class EditRecipeFragment extends Fragment {
       requireActivity().finish();
     }
 
-    selectImageButton.setOnClickListener(v -> {
-      openGallery();
-    });
+    selectImageButton.setOnClickListener(v -> openGallery());
 
-    saveButton.setOnClickListener(v -> {
-      updateRecipe();
-    });
+    saveButton.setOnClickListener(v -> updateRecipe());
 
     return view;
   }
@@ -143,8 +143,8 @@ public class EditRecipeFragment extends Fragment {
       existingRecipe = database.recipeDao().getRecipeById(recipeId);
 
       if (existingRecipe != null) {
-        nameInputLayout.getEditText().setText(existingRecipe.getName());
-        ingredientInputLayout.getEditText().setText(existingRecipe.getIngredients());
+        Objects.requireNonNull(nameInputLayout.getEditText()).setText(existingRecipe.getName());
+        Objects.requireNonNull(ingredientInputLayout.getEditText()).setText(existingRecipe.getIngredients());
         prepInput.setText(existingRecipe.getInstructions());
 
         selectSpinnerItemByValue(timeSpinner, existingRecipe.getPreparationTime());
@@ -181,8 +181,8 @@ public class EditRecipeFragment extends Fragment {
   private void updateRecipe() {
     if (validateForm()) {
       try {
-        String name = nameInputLayout.getEditText().getText().toString().trim();
-        String ingredients = ingredientInputLayout.getEditText().getText().toString().trim();
+        String name = Objects.requireNonNull(nameInputLayout.getEditText()).getText().toString().trim();
+        String ingredients = Objects.requireNonNull(ingredientInputLayout.getEditText()).getText().toString().trim();
         String time = timeSpinner.getSelectedItem().toString();
         String preparation = prepInput.getText().toString().trim();
         String categoryName = categorySpinner.getSelectedItem().toString();
@@ -221,14 +221,14 @@ public class EditRecipeFragment extends Fragment {
   private boolean validateForm() {
     boolean isValid = true;
 
-    if (nameInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+    if (Objects.requireNonNull(nameInputLayout.getEditText()).getText().toString().trim().isEmpty()) {
       nameInputLayout.setError("Veuillez entrer un nom de recette");
       isValid = false;
     } else {
       nameInputLayout.setError(null);
     }
 
-    if (ingredientInputLayout.getEditText().getText().toString().trim().isEmpty()) {
+    if (Objects.requireNonNull(ingredientInputLayout.getEditText()).getText().toString().trim().isEmpty()) {
       ingredientInputLayout.setError("Veuillez entrer des ingrédients");
       isValid = false;
     } else {

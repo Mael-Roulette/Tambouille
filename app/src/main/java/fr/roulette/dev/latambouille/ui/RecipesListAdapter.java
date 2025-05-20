@@ -1,10 +1,12 @@
 package fr.roulette.dev.latambouille.ui;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +47,19 @@ public class RecipesListAdapter extends ArrayAdapter<Recipe> {
         }
 
         Recipe currentRecipe = getItem(position);
+
+        ImageView recipeImageView = listItemView.findViewById(R.id.imageRecipe);
+        if (recipeImageView != null && currentRecipe.getImage() != null && !currentRecipe.getImage().isEmpty()) {
+            try {
+                Uri imageUri = Uri.parse(currentRecipe.getImage());
+                recipeImageView.setImageURI(imageUri);
+            } catch (Exception e) {
+                recipeImageView.setImageResource(R.drawable.ic_photo);
+            }
+        } else if (recipeImageView != null) {
+            recipeImageView.setImageResource(R.drawable.ic_photo);
+        }
+
 
         TextView nameRecipeTextView = listItemView.findViewById(R.id.nameRecipe);
         assert currentRecipe != null;

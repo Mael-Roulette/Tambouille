@@ -33,4 +33,10 @@ public interface RecipeDAO {
 
   @Query("SELECT * FROM Recipe WHERE instructions LIKE :instructions")
   Recipe getRecipeByInstructions(String instructions);
+
+  @Query("SELECT * FROM Recipe WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
+  Recipe[] searchRecipesByName(String query);
+
+  @Query("SELECT * FROM Recipe WHERE name LIKE '%' || :query || '%' OR instructions LIKE '%' || :query || '%' ORDER BY name ASC")
+  Recipe[] searchRecipes(String query);
 }
